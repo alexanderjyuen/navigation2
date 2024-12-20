@@ -63,9 +63,9 @@ inline visualization_msgs::msg::MarkerArray toMsg(
 
   auto getSphereSize = []() {
       geometry_msgs::msg::Vector3 msg;
-      msg.x = 0.05;
-      msg.y = 0.05;
-      msg.z = 0.05;
+      msg.x = 1.0;
+      msg.y = 1.0;
+      msg.z = 1.0;
       return msg;
     };
 

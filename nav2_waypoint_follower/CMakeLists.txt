@@ -25,6 +25,8 @@ find_package(pluginlib REQUIRED)
 
 nav2_package()
 
+link_libraries(stdc++fs)
+
 include_directories(
   include
 )

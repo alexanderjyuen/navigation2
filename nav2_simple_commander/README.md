@@ -14,8 +14,6 @@ See its [API Guide Page](https://navigation.ros.org/commander_api/index.html) fo
 
 The methods provided by the basic navigator are shown below, with inputs and expected returns. If a server fails, it may throw an exception or return a `None` object, so please be sure to properly wrap your navigation calls in try/catch and check results for `None` type.
 
-New as of September 2023: the simple navigator constructor will accept a `namespace` field to support multi-robot applications or namespaced Nav2 launches.
-
 | Robot Navigator Method            | Description                                                                |
 | --------------------------------- | -------------------------------------------------------------------------- |
 | setInitialPose(initial_pose)      | Sets the initial pose (`PoseStamped`) of the robot to localization.        |
@@ -26,11 +24,13 @@ New as of September 2023: the simple navigator constructor will accept a `namesp
 | spin(spin_dist=1.57, time_allowance=10)   | Requests the robot to performs an in-place rotation by a given angle.      |
 | backup(backup_dist=0.15, backup_speed=0.025, time_allowance=10) | Requests the robot to back up by a given distance.         |
 | cancelTask()                       | Cancel an ongoing task request.|
-| isTaskComplete()                   | Checks if task is complete yet, times out at `100ms`.  Returns `True` if completed and `False` if still going.                  |
-| getFeedback()                     | Gets feedback from task, returns action server feedback object. |
+| isTaskComplete(trackingRoute=False)  | Checks if task is complete yet, times out at `100ms`.  Returns `True` if completed and `False` if still going. If checking on a Route Tracking task, set default argument to `True`.                 |
+| getFeedback(trackingRoute=False)                     | Gets feedback from task, returns action server feedback object. If getting feedback on a Route Tracking task, set default argument to `True`. |
 | getResult()				        | Gets final result of task, to be called after `isTaskComplete` returns `True`. Returns action server result object. |
 | getPath(start, goal, planner_id='', use_start=False) | Gets a path from a starting to a goal `PoseStamped`, `nav_msgs/Path`.      |
 | getPathThroughPoses(start, goals, planner_id='', use_start=False) | Gets a path through a starting to a set of goals, a list of `PoseStamped`, `nav_msgs/Path`. |
+| getRoute(start, goal, use_start=False) | Gets a sparse route and a dense path from start to goal using the route server. The start and goal may be either `PoseStamped` or `int` NodeIDs. Returns `[nav_msgs/Path, nav_msgs/Route]`. |
+| getandTrackRoute(start, goal, use_start=False) | Obtains a route and path (sent to client via feedback) and tracks progress along it to trigger internal route graph operations and rerouting mechanics. The start and goal may be either `PoseStamped` or `int` NodeIDs. |
 | smoothPath(path, smoother_id='', max_duration=2.0, check_for_collision=False) | Smooths a given `nav_msgs/msg/Path` path. |
 | changeMap(map_filepath)           | Requests a change from the current map to `map_filepath`'s yaml.           |
 | clearAllCostmaps()                | Clears both the global and local costmaps.                                 |
@@ -87,7 +87,7 @@ The main benefit of this is automatically showing the above demonstrations in a 
 
 ``` bash
 # Launch the launch file for the demo / example
-ros2 launch nav2_simple_commander  security_demo_launch.py
+ros2 launch nav2_simple_commander demo_security_launch.py
 ```
 
 This will bring up the robot in the AWS Warehouse in a reasonable position, launch the autonomy script, and complete some task to demonstrate the `nav2_simple_commander` API.
@@ -114,6 +114,8 @@ The `nav2_simple_commander` has a few examples to highlight the API functions av
 - `example_nav_through_poses.py` - Demonstrates the navigate through poses capabilities of the navigator, as well as a number of auxiliary methods.
 - `example_waypoint_follower.py` - Demonstrates the waypoint following capabilities of the navigator, as well as a number of auxiliary methods.
 - `example_follow_path.py` - Demonstrates the path following capabilities of the navigator, as well as a number of auxiliary methods such as path smoothing.
+- `example_route.py` - Demonstrates the route server's capabilities of the navigator, as well as a number of methods of how to use it, such as via waypoint following or control server path tracking (among other options).
+- `example_assisted_teleop.py` - Demonstrates the assisted teleop's capabilities of the navigator.
 ## Demos
 
 The `nav2_simple_commander` has a few demonstrations to highlight a couple of simple autonomy applications you can build using the `nav2_simple_commander` API:

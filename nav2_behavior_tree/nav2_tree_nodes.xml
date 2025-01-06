@@ -88,6 +88,32 @@
       <output_port name="path">Path created by ComputePathToPose node</output_port>
     </Action>
 
+    <Action ID="ComputeAndTrackRouteToPose">
+      <input_port name="goal">Destination pose to plan to</input_port>
+      <input_port name="start">Start pose of the path if overriding current robot pose</input_port>
+      <input_port name="goal_id">Destination node id to plan to</input_port>
+      <input_port name="start_id">Start node id of the path if overriding current robot pose</input_port>
+      <input_port name="server_name">Server name</input_port>
+      <input_port name="server_timeout">Server timeout</input_port>
+
+      <output_port name="last_node_id">Previous node ID</output_port>
+      <output_port name="next_node_id">Next node ID</output_port>
+      <output_port name="route">List of RouteNodes to go from start to end</output_port>
+      <output_port name="path">Path created by ComputeAndTrackRouteToPose node</output_port>
+    </Action>
+
+    <Action ID="ComputeRouteToPose">
+      <input_port name="goal">Destination pose to plan to</input_port>
+      <input_port name="start">Start pose of the path if overriding current robot pose</input_port>
+      <input_port name="goal_id">Destination node id to plan to</input_port>
+      <input_port name="start_id">Start node id of the path if overriding current robot pose</input_port>
+      <input_port name="server_name">Server name</input_port>
+      <input_port name="server_timeout">Server timeout</input_port>
+
+      <output_port name="route">List of RouteNodes to go from start to end</output_port>
+      <output_port name="path">Path created by ComputeAndTrackRouteToPose node</output_port>
+    </Action>
+
     <Action ID="RemovePassedGoals">
       <input_port name="input_goals">Input goals to remove if passed</input_port>
       <input_port name="radius">Radius tolerance on a goal to consider it passed</input_port>

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Samsung Research America
+# Copyright (c) 2023 Samsung Research America
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,9 +35,9 @@ def generate_launch_description():
         cmd=['gzserver', '-s', 'libgazebo_ros_factory.so', world],
         cwd=[warehouse_dir], output='screen')
 
-    start_gazebo_client_cmd = ExecuteProcess(
-        cmd=['gzclient'],
-        cwd=[warehouse_dir], output='screen')
+    # start_gazebo_client_cmd = ExecuteProcess(
+    #     cmd=['gzclient'],
+    #     cwd=[warehouse_dir], output='screen')
 
     urdf = os.path.join(nav2_bringup_dir, 'urdf', 'turtlebot3_waffle.urdf')
     start_robot_state_publisher_cmd = Node(
@@ -63,13 +63,13 @@ def generate_launch_description():
     # start the demo autonomy task
     demo_cmd = Node(
         package='nav2_simple_commander',
-        executable='demo_recoveries',
+        executable='example_route',
         emulate_tty=True,
         output='screen')
 
     ld = LaunchDescription()
     ld.add_action(start_gazebo_server_cmd)
-    ld.add_action(start_gazebo_client_cmd)
+    # ld.add_action(start_gazebo_client_cmd)
     ld.add_action(start_robot_state_publisher_cmd)
     ld.add_action(rviz_cmd)
     ld.add_action(bringup_cmd)

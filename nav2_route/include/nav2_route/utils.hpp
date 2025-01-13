@@ -63,9 +63,9 @@ inline visualization_msgs::msg::MarkerArray toMsg(
 
   auto getSphereSize = []() {
       geometry_msgs::msg::Vector3 msg;
-      msg.x = 1.0;
-      msg.y = 1.0;
-      msg.z = 1.0;
+      msg.x = 0.5;
+      msg.y = 0.5;
+      msg.z = 0.5;
       return msg;
     };
 
@@ -119,7 +119,7 @@ inline visualization_msgs::msg::MarkerArray toMsg(
       curr_marker.points[0].y = graph[i].coords.y;
       curr_marker.points[1].x = graph[i].neighbors[j].end->coords.x;
       curr_marker.points[1].y = graph[i].neighbors[j].end->coords.y;
-      curr_marker.scale.x = 0.03;
+      curr_marker.scale.x = 0.1;
       curr_marker.color = getLineColor();
       msg.markers.push_back(curr_marker);
       curr_marker.points.clear();  // Reset for next node marker

@@ -35,8 +35,7 @@ ComputeRouteToPoseAction::ComputeRouteToPoseAction(
 void ComputeRouteToPoseAction::on_tick()
 {
   //TODO: Checks for undetermined combos? Or is that done at the route_server level
-  
-  RCLCPP_INFO(node_->get_logger(), "NODE TICKED");
+
   
   goal_.use_start = false;
   if (getInput("goal_id", goal_.goal_id)){
@@ -45,8 +44,6 @@ void ComputeRouteToPoseAction::on_tick()
       goal_.use_start = true;
     }
   } else if(getInput("goal", goal_.goal)){
-    RCLCPP_INFO(node_->get_logger(), "goal_.goal.pose.x %f", goal_.goal.pose.position.x);
-    RCLCPP_INFO(node_->get_logger(), "goal_.goal.pose.y %f", goal_.goal.pose.position.y);
     goal_.use_poses = true;
     if(getInput("start", goal_.start)){
       goal_.use_start = true;

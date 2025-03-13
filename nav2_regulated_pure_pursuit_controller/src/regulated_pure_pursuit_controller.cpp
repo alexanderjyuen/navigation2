@@ -696,6 +696,9 @@ nav_msgs::msg::Path RegulatedPurePursuitController::transformGlobalPlan(
     throw nav2_core::PlannerException("Received plan with zero length");
   }
 
+  RCLCPP_INFO(logger_, "pose_x: %f, pose_y: %f, in frame: %s", pose.pose.position.x, pose.pose.position.y, pose.header.frame_id.c_str());
+    
+
   // let's get the pose of the robot in the frame of the plan
   geometry_msgs::msg::PoseStamped robot_pose;
   if (!transformPose(global_plan_.header.frame_id, pose, robot_pose)) {

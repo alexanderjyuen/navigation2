@@ -149,7 +149,7 @@ void RoutePlanner::findShortestGraphTraversal(
 
 bool RoutePlanner::getTraversalCost(
   const EdgePtr edge, float & score, const std::vector<unsigned int> & blocked_ids,
-  const geometry_msgs::msg::PoseStamped & start, const geometry_msgs::msg::PoseStamped & goal, const RouteData & /*route_data*/)
+  const geometry_msgs::msg::PoseStamped & start, const geometry_msgs::msg::PoseStamped & goal, const RouteData & route_data)
 {
   // If edge or node is in the blocked list, as long as its not blocking the goal itself
   auto idBlocked = [&](unsigned int id) {return id == edge->edgeid || id == edge->end->nodeid;};
@@ -168,7 +168,7 @@ bool RoutePlanner::getTraversalCost(
     return true;
   }
 
-  return edge_scorer_->score(edge, start, goal, classifyEdge(edge), score);
+  return edge_scorer_->score(edge, start, goal, route_data, classifyEdge(edge), score);
 }
 
 NodeElement RoutePlanner::getNextNode()

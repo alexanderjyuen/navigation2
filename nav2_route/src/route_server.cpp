@@ -296,15 +296,15 @@ RouteServer::processRouteRequest(
     exceptionWarning(goal, ex);
     result->error_code = ActionT::Goal::INDETERMINANT_NODES_ON_GRAPH;
     action_server->terminate_current(result);
+  } catch (nav2_core::InvalidCriticUse & ex) {
+      exceptionWarning(goal, ex);
+      result->error_code = ActionT::Goal::INVALID_CRITIC_USE;
+      action_server->terminate_current(result); 
   } catch (nav2_core::OperationFailed & ex) {
     // A special case since Operation Failed is only in Compute & Track
     // actions, specifying it to allow otherwise fully shared code
     exceptionWarning(goal, ex);
     result->error_code = ComputeAndTrackRoute::Goal::OPERATION_FAILED;
-    action_server->terminate_current(result);
-  } catch (nav2_core::InvalidCriticUse & ex) {
-    exceptionWarning(goal, ex);
-    result->error_code = ActionT::Goal::UNKNOWN;
     action_server->terminate_current(result);
   } catch (nav2_core::RouteException & ex) {
     exceptionWarning(goal, ex);

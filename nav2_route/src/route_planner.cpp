@@ -42,8 +42,6 @@ void RoutePlanner::configure(
 Route RoutePlanner::findRoute(
   Graph & graph, unsigned int start_index, unsigned int goal_index,
   const std::vector<unsigned int> & blocked_ids,
-  const geometry_msgs::msg::PoseStamped & start_pose,
-  const geometry_msgs::msg::PoseStamped & goal_pose,
   const RouteData & route_data)
 {
   if (graph.empty()) {
@@ -55,7 +53,7 @@ Route RoutePlanner::findRoute(
   // not lost in the route when this function goes out of scope.
   const NodePtr & start_node = &graph.at(start_index);
   const NodePtr & goal_node = &graph.at(goal_index);
-  findShortestGraphTraversal(graph, start_node, goal_node, blocked_ids, start_pose, goal_pose, route_data);
+  findShortestGraphTraversal(graph, start_node, goal_node, blocked_ids, route_data);
 
   EdgePtr & parent_edge = goal_node->search_state.parent_edge;
   if (!parent_edge) {
@@ -87,8 +85,6 @@ void RoutePlanner::resetSearchStates(Graph & graph)
 void RoutePlanner::findShortestGraphTraversal(
   Graph & graph, const NodePtr start_node, const NodePtr goal_node,
   const std::vector<unsigned int> & blocked_ids,
-  const geometry_msgs::msg::PoseStamped & start_pose,
-  const geometry_msgs::msg::PoseStamped & goal_pose,
   const RouteData & route_data)
 {
   // Setup the Dijkstra's search
@@ -125,7 +121,7 @@ void RoutePlanner::findShortestGraphTraversal(
       neighbor = edge->end;
 
       // If edge is invalid (lane closed, occupied, etc), don't expand
-      if (!getTraversalCost(edge, traversal_cost, blocked_ids, start_pose, goal_pose, route_data)) {
+      if (!getTraversalCost(edge, traversal_cost, blocked_ids, route_data)) {
         continue;
       }
 
@@ -149,7 +145,7 @@ void RoutePlanner::findShortestGraphTraversal(
 
 bool RoutePlanner::getTraversalCost(
   const EdgePtr edge, float & score, const std::vector<unsigned int> & blocked_ids,
-  const geometry_msgs::msg::PoseStamped & start, const geometry_msgs::msg::PoseStamped & goal, const RouteData & route_data)
+  const RouteData & route_data)
 {
   // If edge or node is in the blocked list, as long as its not blocking the goal itself
   auto idBlocked = [&](unsigned int id) {return id == edge->edgeid || id == edge->end->nodeid;};
@@ -168,7 +164,7 @@ bool RoutePlanner::getTraversalCost(
     return true;
   }
 
-  return edge_scorer_->score(edge, start, goal, route_data, classifyEdge(edge), score);
+  return edge_scorer_->score(edge, route_data, classifyEdge(edge), score);
 }
 
 NodeElement RoutePlanner::getNextNode()

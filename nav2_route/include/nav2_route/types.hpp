@@ -137,6 +137,8 @@ struct DirectionalEdge
   EdgeCost edge_cost;      // Cost information associated with edge
   Metadata metadata;       // Any metadata stored in the graph file of interest
   Operations operations;   // Operations to perform related to the edge
+
+  float getEdgeLength();
 };
 
 typedef DirectionalEdge * EdgePtr;
@@ -193,6 +195,12 @@ struct Node
   }
 };
 
+inline float DirectionalEdge::getEdgeLength(){
+  return hypotf(
+    end->coords.x - start->coords.x,
+    end->coords.y - start->coords.y);
+}
+
 /**
  * @struct nav2_route::Route
  * @brief An ordered set of nodes and edges corresponding to the planned route
@@ -216,7 +224,7 @@ struct RouteRequest
   unsigned int goal_nodeid;                     //node id of goal node
   geometry_msgs::msg::PoseStamped start_pose;   //pose of start
   geometry_msgs::msg::PoseStamped goal_pose;    //pose of goal
-  bool use_poses;                               //whether the start and goal poses are used 
+  bool use_poses;                               //whether the start and goal poses are used
 };
 
 /**
@@ -271,7 +279,7 @@ struct ReroutingState
 
 /**
  * @enum nav2_route::EdgeType
- * @brief An enum class describing what type of edge connecting two nodes is 
+ * @brief An enum class describing what type of edge connecting two nodes is
  */
 enum class EdgeType
 {

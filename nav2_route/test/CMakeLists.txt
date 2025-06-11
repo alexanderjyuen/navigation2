@@ -132,13 +132,13 @@ target_link_libraries(test_route_tracker
   ${library_name}
 )
 
-# Test route server
-ament_add_gtest(test_route_server
-  test_route_server.cpp
+# Test corner smoothing
+ament_add_gtest(test_corner_smoothing
+  test_corner_smoothing.cpp
 )
-ament_target_dependencies(test_route_server
+ament_target_dependencies(test_corner_smoothing
   ${dependencies}
 )
-target_link_libraries(test_route_server
+target_link_libraries(test_corner_smoothing
   ${library_name}
 )

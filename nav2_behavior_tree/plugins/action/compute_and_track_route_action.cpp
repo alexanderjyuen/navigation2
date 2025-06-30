@@ -66,7 +66,7 @@ BT::NodeStatus ComputeAndTrackRouteAction::on_cancelled()
 }
 
 void ComputeAndTrackRouteAction::on_wait_for_result(
-  std::shared_ptr<const Action::Feedback>/*feedback*/)
+  std::shared_ptr<const Action::Feedback> feedback)
 {
   // Check for request updates to the goal
   bool use_poses = false, use_start = false;
@@ -113,6 +113,27 @@ void ComputeAndTrackRouteAction::on_wait_for_result(
   if (goal_updated_) {
     on_tick();
   }
+
+  if(feedback){
+    RCLCPP_INFO(node_->get_logger(), "FEEDBACK RECIEVED");
+    setOutput("last_node_id", feedback->last_node_id);
+    setOutput("next_node_id", feedback->next_node_id);
+    setOutput("current_edge_id", feedback->current_edge_id);
+    setOutput("route", feedback->route);
+    setOutput("path", feedback->path);
+    setOutput("rerouted", feedback->rerouted);
+  }//else{
+//     RCLCPP_INFO(node_->get_logger(), "EMPTY FEEDBACK RECIEVED");
+//     nav2_msgs::msg::Route empty_route;
+//     nav_msgs::msg::Path empty_path;
+//     setOutput("last_node_id", static_cast<uint16_t>(0));
+//     setOutput("next_node_id", static_cast<uint16_t>(0));
+//     setOutput("current_edge_id", static_cast<uint16_t>(0));
+//     setOutput("route", empty_route);
+//     setOutput("path", empty_path);
+//     setOutput("rerouted", false);
+//   }
+
 }
 
 }  // namespace nav2_behavior_tree

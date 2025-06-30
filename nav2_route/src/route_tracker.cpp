@@ -136,6 +136,7 @@ void RouteTracker::publishFeedback(
   const unsigned int edge_id,
   const std::vector<std::string> & operations)
 {
+  RCLCPP_INFO(logger_, "PUBLISHING FEEDBACK");
   auto feedback = std::make_unique<Feedback>();
   feedback->route = route_msg_;
   feedback->path = path_;
@@ -151,6 +152,7 @@ TrackerResult RouteTracker::trackRoute(
   const Route & route, const nav_msgs::msg::Path & path,
   ReroutingState & rerouting_info)
 {
+  RCLCPP_INFO(logger_, "TRACKING ROUTE");
   route_msg_ = utils::toMsg(route, route_frame_, clock_->now());
   path_ = path;
   RouteTrackingState state;
@@ -182,6 +184,7 @@ TrackerResult RouteTracker::trackRoute(
     // Update the tracking state
     geometry_msgs::msg::PoseStamped robot_pose = getRobotPose();
     if (nodeAchieved(robot_pose, state, route)) {
+      RCLCPP_INFO(logger_, "NODE ACHIEVED");
       status_change = true;
       state.within_radius = false;
       state.last_node = state.next_node;
@@ -204,11 +207,19 @@ TrackerResult RouteTracker::trackRoute(
       return TrackerResult::COMPLETED;
     }
 
-    if ((status_change || !ops_result.operations_triggered.empty()) && state.current_edge) {
-      publishFeedback(
-        false,  // No rerouting occurred
-        state.next_node->nodeid, state.last_node->nodeid,
-        state.current_edge->edgeid, ops_result.operations_triggered);
+    RCLCPP_INFO(logger_, "status_change %i", status_change);
+    RCLCPP_INFO(logger_, "ops_result.operations_triggered.empty() %i", ops_result.operations_triggered.empty());
+
+    if (status_change || !ops_result.operations_triggered.empty()){
+      if(state.current_edge){
+        RCLCPP_INFO(logger_, "PUBLISHING FEEDBACK");
+        publishFeedback(
+          false,  // No rerouting occurred
+          state.next_node->nodeid, state.last_node->nodeid,
+          state.current_edge->edgeid, ops_result.operations_triggered);
+      } else {
+        publishFeedback(false, state.next_node->nodeid, 0, 0, ops_result.operations_triggered);
+      }
     }
 
     if (ops_result.reroute) {

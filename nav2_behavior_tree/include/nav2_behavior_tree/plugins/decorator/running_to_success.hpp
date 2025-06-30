@@ -52,6 +52,8 @@ private:
    * @return BT::NodeStatus Status of tick execution
    */
   BT::NodeStatus tick() override;
+
+  rclcpp::Node::SharedPtr node_;
 };
 
 }  // namespace nav2_behavior_tree

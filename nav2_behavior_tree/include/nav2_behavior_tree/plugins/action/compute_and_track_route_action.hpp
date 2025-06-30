@@ -92,6 +92,18 @@ public:
           "Whether to use the start pose or the robot's current pose"),
         BT::InputPort<bool>(
           "use_poses", false, "Whether to use poses or IDs for start and goal"),
+        BT::OutputPort<uint16_t>("last_node_id",
+          "ID of the previous node"),
+        BT::OutputPort<uint16_t>("next_node_id",
+          "ID of the next node"),
+        BT::OutputPort<uint16_t>("current_edge_id",
+          "ID of current edge"),
+        BT::OutputPort<nav2_msgs::msg::Route>("route",
+          "List of RouteNodes to go from start to end"),
+        BT::OutputPort<nav_msgs::msg::Path>("path",
+          "Path created by ComputeAndTrackRoute node"),
+        BT::OutputPort<bool>("rerouted",
+          "Whether the plan has rerouted"),
       });
   }
 };

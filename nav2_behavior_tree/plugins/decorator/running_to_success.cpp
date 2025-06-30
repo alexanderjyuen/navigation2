@@ -26,6 +26,7 @@ RunningToSuccess::RunningToSuccess(
   const BT::NodeConfiguration & conf)
 : BT::DecoratorNode(name, conf)
 {
+  node_ = config().blackboard->get<rclcpp::Node::SharedPtr>("node");
 }
 
 BT::NodeStatus RunningToSuccess::tick()
@@ -40,6 +41,7 @@ BT::NodeStatus RunningToSuccess::tick()
     case BT::NodeStatus::SUCCESS:
       return status;
     case BT::NodeStatus::RUNNING:
+      RCLCPP_INFO(node_->get_logger(), "RETURNING SUCCESS");
       return BT::NodeStatus::SUCCESS;
     default:
       std::stringstream error_msg;

@@ -241,7 +241,6 @@ RouteServer::processRouteRequest(
 
   try {
     while (rclcpp::ok()) {
-      RCLCPP_INFO(get_logger(), "processRouteRequest");
       if (!isRequestValid(action_server)) {
         return;
       }
@@ -264,13 +263,10 @@ RouteServer::processRouteRequest(
           case TrackerResult::COMPLETED:
             populateActionResult(result, route, path, planning_duration);
             action_server->succeeded_current(result);
-            RCLCPP_INFO(get_logger(), "SUCCESS");
             return;
           case TrackerResult::REROUTE:
-            RCLCPP_INFO(get_logger(), "REROUTING");
             break;
           case TrackerResult::INTERRUPTED:
-            RCLCPP_INFO(get_logger(), "INTERRUPTED");
             return;
         }
       } else {

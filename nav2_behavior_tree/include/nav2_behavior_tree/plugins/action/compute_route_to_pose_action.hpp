@@ -60,13 +60,17 @@ public:
   {
     return providedBasicPorts(
       {
+        BT::InputPort<unsigned int>("start_id", "ID of the start node"),
+        BT::InputPort<unsigned int>("goal_id", "ID of the goal node"),
+        BT::InputPort<geometry_msgs::msg::PoseStamped>(
+          "start",
+          "Start pose of the path if overriding current robot pose and using poses over IDs"),
+        BT::InputPort<geometry_msgs::msg::PoseStamped>(
+          "goal", "Goal pose of the path if using poses over IDs"),
+
         BT::OutputPort<nav2_msgs::msg::Route>("route", "List of RouteNodes to go from start to end"),
         BT::OutputPort<nav_msgs::msg::Path>("path", "Path created by ComputeAndTrackRouteToPose node"),
 
-        BT::InputPort<geometry_msgs::msg::PoseStamped>("goal", "Destination pose to plan to"),
-        BT::InputPort<geometry_msgs::msg::PoseStamped>("start", "Start pose of the path if overriding current robot pose"),
-        BT::InputPort<std::uint16_t>("goal_id", "Destination node id to plan to"),
-        BT::InputPort<std::uint16_t>("start_id", "Start node id of the path if overriding current robot pose"),
       });
   }
 };

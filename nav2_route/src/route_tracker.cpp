@@ -204,15 +204,11 @@ TrackerResult RouteTracker::trackRoute(
       return TrackerResult::COMPLETED;
     }
 
-    if (status_change || !ops_result.operations_triggered.empty()){
-      if(state.current_edge){
-        publishFeedback(
-          false,  // No rerouting occurred
-          state.next_node->nodeid, state.last_node->nodeid,
-          state.current_edge->edgeid, ops_result.operations_triggered);
-      } else {
-        publishFeedback(false, state.next_node->nodeid, 0, 0, ops_result.operations_triggered);
-      }
+    if ((status_change || !ops_result.operations_triggered.empty()) && state.current_edge) {
+      publishFeedback(
+        false,  // No rerouting occurred
+        state.next_node->nodeid, state.last_node->nodeid,
+        state.current_edge->edgeid, ops_result.operations_triggered);
     }
 
     if (ops_result.reroute) {

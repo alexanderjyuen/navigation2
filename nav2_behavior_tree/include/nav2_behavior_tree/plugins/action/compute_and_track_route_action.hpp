@@ -106,6 +106,9 @@ public:
           "Whether the plan has rerouted"),
       });
   }
+
+private:
+  Action::Feedback feedback_;
 };
 
 }  // namespace nav2_behavior_tree

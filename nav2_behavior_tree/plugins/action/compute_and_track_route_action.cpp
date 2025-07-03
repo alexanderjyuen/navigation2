@@ -26,6 +26,14 @@ ComputeAndTrackRouteAction::ComputeAndTrackRouteAction(
   const BT::NodeConfiguration & conf)
 : BtActionNode<Action>(xml_tag_name, action_name, conf)
 {
+  nav_msgs::msg::Path empty_path;
+  nav2_msgs::msg::Route empty_route;
+  feedback_.last_node_id = 0;
+  feedback_.next_node_id = 0;
+  feedback_.current_edge_id = 0;
+  feedback_.route = empty_route;
+  feedback_.path = empty_path;
+  feedback_.rerouted = false;
 }
 
 void ComputeAndTrackRouteAction::on_tick()
@@ -60,11 +68,39 @@ BT::NodeStatus ComputeAndTrackRouteAction::on_success()
 
 BT::NodeStatus ComputeAndTrackRouteAction::on_aborted()
 {
+  nav_msgs::msg::Path empty_path;
+  nav2_msgs::msg::Route empty_route;
+  feedback_.last_node_id = 0;
+  feedback_.next_node_id = 0;
+  feedback_.current_edge_id = 0;
+  feedback_.route = empty_route;
+  feedback_.path = empty_path;
+  feedback_.rerouted = false;
+  setOutput("last_node_id", feedback_.last_node_id);
+  setOutput("next_node_id", feedback_.next_node_id);
+  setOutput("current_edge_id", feedback_.current_edge_id);
+  setOutput("route", feedback_.route);
+  setOutput("path", feedback_.path);
+  setOutput("rerouted", feedback_.rerouted);
   return BT::NodeStatus::FAILURE;
 }
 
 BT::NodeStatus ComputeAndTrackRouteAction::on_cancelled()
 {
+  nav_msgs::msg::Path empty_path;
+  nav2_msgs::msg::Route empty_route;
+  feedback_.last_node_id = 0;
+  feedback_.next_node_id = 0;
+  feedback_.current_edge_id = 0;
+  feedback_.route = empty_route;
+  feedback_.path = empty_path;
+  feedback_.rerouted = false;
+  setOutput("last_node_id", feedback_.last_node_id);
+  setOutput("next_node_id", feedback_.next_node_id);
+  setOutput("current_edge_id", feedback_.current_edge_id);
+  setOutput("route", feedback_.route);
+  setOutput("path", feedback_.path);
+  setOutput("rerouted", feedback_.rerouted);
   return BT::NodeStatus::SUCCESS;
 }
 
@@ -118,13 +154,20 @@ void ComputeAndTrackRouteAction::on_wait_for_result(
   }
 
   if(feedback){
-    setOutput("last_node_id", feedback->last_node_id);
-    setOutput("next_node_id", feedback->next_node_id);
-    setOutput("current_edge_id", feedback->current_edge_id);
-    setOutput("route", feedback->route);
-    setOutput("path", feedback->path);
-    setOutput("rerouted", feedback->rerouted);
+    feedback_.last_node_id = feedback->last_node_id;
+    feedback_.next_node_id = feedback->next_node_id;
+    feedback_.current_edge_id = feedback->current_edge_id;
+    feedback_.route = feedback->route;
+    feedback_.path = feedback->path;
+    feedback_.rerouted = feedback->rerouted;
   }
+
+  setOutput("last_node_id", feedback_.last_node_id);
+  setOutput("next_node_id", feedback_.next_node_id);
+  setOutput("current_edge_id", feedback_.current_edge_id);
+  setOutput("route", feedback_.route);
+  setOutput("path", feedback_.path);
+  setOutput("rerouted", feedback_.rerouted);
 }
 
 }  // namespace nav2_behavior_tree

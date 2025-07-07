@@ -63,51 +63,19 @@ void ComputeAndTrackRouteAction::on_tick()
 
 BT::NodeStatus ComputeAndTrackRouteAction::on_success()
 {
-  RCLCPP_INFO(node_->get_logger(), "ComputeAndTrackRoute Success!");
-  setOutput("last_node_id", feedback_.last_node_id);
-  setOutput("next_node_id", feedback_.next_node_id);
-  setOutput("current_edge_id", feedback_.current_edge_id);
-  setOutput("route", feedback_.route);
-  setOutput("path", feedback_.path);
-  setOutput("rerouted", feedback_.rerouted);
+  resetFeedbackAndOutputPorts();
   return BT::NodeStatus::SUCCESS;
 }
 
 BT::NodeStatus ComputeAndTrackRouteAction::on_aborted()
 {
-  nav_msgs::msg::Path empty_path;
-  nav2_msgs::msg::Route empty_route;
-  feedback_.last_node_id = 0;
-  feedback_.next_node_id = 0;
-  feedback_.current_edge_id = 0;
-  feedback_.route = empty_route;
-  feedback_.path = empty_path;
-  feedback_.rerouted = false;
-  setOutput("last_node_id", feedback_.last_node_id);
-  setOutput("next_node_id", feedback_.next_node_id);
-  setOutput("current_edge_id", feedback_.current_edge_id);
-  setOutput("route", feedback_.route);
-  setOutput("path", feedback_.path);
-  setOutput("rerouted", feedback_.rerouted);
+  resetFeedbackAndOutputPorts();
   return BT::NodeStatus::FAILURE;
 }
 
 BT::NodeStatus ComputeAndTrackRouteAction::on_cancelled()
 {
-  nav_msgs::msg::Path empty_path;
-  nav2_msgs::msg::Route empty_route;
-  feedback_.last_node_id = 0;
-  feedback_.next_node_id = 0;
-  feedback_.current_edge_id = 0;
-  feedback_.route = empty_route;
-  feedback_.path = empty_path;
-  feedback_.rerouted = false;
-  setOutput("last_node_id", feedback_.last_node_id);
-  setOutput("next_node_id", feedback_.next_node_id);
-  setOutput("current_edge_id", feedback_.current_edge_id);
-  setOutput("route", feedback_.route);
-  setOutput("path", feedback_.path);
-  setOutput("rerouted", feedback_.rerouted);
+  resetFeedbackAndOutputPorts();
   return BT::NodeStatus::SUCCESS;
 }
 
@@ -160,15 +128,26 @@ void ComputeAndTrackRouteAction::on_wait_for_result(
     on_tick();
   }
 
-  if(feedback){
-    feedback_.last_node_id = feedback->last_node_id;
-    feedback_.next_node_id = feedback->next_node_id;
-    feedback_.current_edge_id = feedback->current_edge_id;
-    feedback_.route = feedback->route;
-    feedback_.path = feedback->path;
-    feedback_.rerouted = feedback->rerouted;
+  if (feedback) {
+    feedback_ = *feedback;
+    setOutput("last_node_id", feedback_.last_node_id);
+    setOutput("next_node_id", feedback_.next_node_id);
+    setOutput("current_edge_id", feedback_.current_edge_id);
+    setOutput("route", feedback_.route);
+    setOutput("path", feedback_.path);
+    setOutput("rerouted", feedback_.rerouted);
   }
+}
 
+void ComputeAndTrackRouteAction::resetFeedbackAndOutputPorts(){
+  nav_msgs::msg::Path empty_path;
+  nav2_msgs::msg::Route empty_route;
+  feedback_.last_node_id = 0;
+  feedback_.next_node_id = 0;
+  feedback_.current_edge_id = 0;
+  feedback_.route = empty_route;
+  feedback_.path = empty_path;
+  feedback_.rerouted = false;
   setOutput("last_node_id", feedback_.last_node_id);
   setOutput("next_node_id", feedback_.next_node_id);
   setOutput("current_edge_id", feedback_.current_edge_id);

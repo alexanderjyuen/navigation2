@@ -65,7 +65,7 @@ public:
    * @param base_frame Robot reference frame
    */
   void configure(
-    rclcpp_lifecycle::LifecycleNode::SharedPtr node,
+    nav2::LifecycleNode::SharedPtr node,
     Graph & graph,
     GraphToIDMap * id_to_graph_map,
     std::shared_ptr<tf2_ros::Buffer> tf,
